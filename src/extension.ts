@@ -210,7 +210,7 @@ export function activate(context: vscode.ExtensionContext) {
                                     isAddParams ? payloadCode : ""
                                 }}`;
                             } else {
-								newCode += `\n\n${stateName} _${actionName}(${stateName} state, Action action) {\n  ${stateName} newState = ${stateName}();${
+								newCode += `\n\n${stateName} _${actionName}(${stateName} state, Action action) {\n  ${stateName} newState = state.clone();${
                                     isAddParams ? payloadCode : ""
                                 }\n  return newState;\n}`;
                             }

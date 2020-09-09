@@ -25,6 +25,10 @@ Add Reduce Function
 
 Initial release of ...
 
+### 0.0.2
+
+fix bug by regex
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown
