@@ -29,6 +29,14 @@ Initial release of ...
 
 fix bug by regex
 
+### 0.0.3
+
+fix reducer state error
+
+### 0.0.4
+
+add AddParams function
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown

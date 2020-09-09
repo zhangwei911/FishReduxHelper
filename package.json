@@ -2,7 +2,7 @@
 	"name": "fishreduxhelper",
 	"displayName": "FishReduxHelper",
 	"description": "Fish Redux Helper",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"engines": {
 		"vscode": "^1.48.0"
 	},
@@ -11,7 +11,8 @@
 	],
 	"publisher": "wellchang",
 	"activationEvents": [
-		"onCommand:fishreduxhelper.addAction"
+		"onCommand:fishreduxhelper.addAction",
+		"onCommand:fishreduxhelper.addParams"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -19,6 +20,10 @@
 			{
 				"command": "fishreduxhelper.addAction",
 				"title": "Fish Redux Helper: Add Action"
+			},
+			{
+				"command": "fishreduxhelper.addParams",
+				"title": "Fish Redux Helper: Add Params"
 			}
 		]
 	},
