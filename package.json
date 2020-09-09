@@ -2,7 +2,7 @@
 	"name": "fishreduxhelper",
 	"displayName": "FishReduxHelper",
 	"description": "Fish Redux Helper",
-	"version": "0.0.1",
+	"version": "0.1.0",
 	"engines": {
 		"vscode": "^1.48.0"
 	},
