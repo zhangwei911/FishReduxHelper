@@ -183,8 +183,8 @@ export function activate(context: vscode.ExtensionContext) {
                         const lineText = codeDoc.lineAt(index).text;
                         const r =
                             actionType == "effect"
-                                ? /return combineEffects\(\<Object, Effect\<([a-zA-Z0-9].*)State\>\>\{/g
-                                : /return asReducer\(\<Object, Reducer\<([a-zA-Z0-9].*)State\>\>\{/g;
+                                ? /\<Object, Effect\<([a-zA-Z0-9].*)State\>\>\{/g
+                                : /\<Object, Reducer\<([a-zA-Z0-9].*)State\>\>\{/g;
                         const m = r.exec(lineText);
                         if (m != null) {
                             isStartCheck = true;
