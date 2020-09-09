@@ -39,7 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
                 );
                 let fileListSize = fileList.length;
                 let fileSelectList = new Array<SelectItem>();
-                fileList.forEach((element) => {
+                fileList.forEach((element: vscode.Uri) => {
                     if (element.path.endsWith(`${actionType}.dart`)) {
                         let selectItem = new SelectItem(
                             path.basename(path.dirname(element.path))
