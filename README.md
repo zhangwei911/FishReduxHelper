@@ -1,3 +1,4 @@
+[![version](https://img.shields.io/vscode-marketplace/v/wellchang.fishreduxhelper.svg?style=flat-square&label=vscode%20marketplace)](https://marketplace.visualstudio.com/items?itemName=wellchang.fishreduxhelper)
 # fishreduxhelper
 
 Fish Redux Helper
