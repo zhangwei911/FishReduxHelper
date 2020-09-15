@@ -37,6 +37,10 @@ fix reducer state error
 
 add AddParams function
 
+### 0.0.5
+
+fix Add Action Failed by format file
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown
