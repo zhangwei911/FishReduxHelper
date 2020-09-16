@@ -13,6 +13,9 @@ Jump To Effect/Reduce Function
 
 ![img](https://github.com/zhangwei911/FishReduxHelper/blob/master/screenShots/jumpToAction.gif?raw=true)
 
+
+Auto Completion for dispatch
+
 ## Requirements
 
 
@@ -61,6 +64,10 @@ fix Jump To Effect/Reduce Function jump to comment
 ### 0.0.9
 
 fix Jump To Effect/Reduce Function jump error
+
+### 0.0.10
+
+Auto Completion for dispatch
 
 -----------------------------------------------------------------------------------------------------------
 
