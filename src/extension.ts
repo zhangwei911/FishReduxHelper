@@ -412,7 +412,7 @@ async function providerDefinitionForFishReduxAction(
                 );
                 const actionCode = actionCodeDoc.getText();
                 const r = new RegExp(
-                    `static[\\s]*Action[\\s]*${word}\\(\\)[\\s]*\\{[\\s]*return const Action\\(([a-zA-Z0-9]*Action.[a-zA-Z0-9_]*).*\\);[\\s]*\\}`,
+                    `static[\\s].*Action[\\s].*${word}\\(.*\\)[\\s].*\\{[\\s].*return[const\\s].*Action\\(([a-zA-Z0-9]*Action.[a-zA-Z0-9_]*).*\\);[\\s].*\\}`,
                     "gm"
                 );
                 const m = r.exec(actionCode);
