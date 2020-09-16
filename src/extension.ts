@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import { SelectItem } from "./bean";
 import * as path from "path";
 import { stringToUint8Array } from "./utils";
+import { randomBytes } from "crypto";
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -376,6 +377,108 @@ export function activate(context: vscode.ExtensionContext) {
             provideDefinition: providerDefinitionForFishReduxAction,
         })
     );
+
+    context.subscriptions.push(
+        vscode.languages.registerCompletionItemProvider(
+            "dart",
+            {
+                provideCompletionItems: provideCompletionItemsForFishReduxDispatch,
+            },
+            "("
+        )
+    );
+}
+
+/**
+ * 自动提示实现，这里模拟一个很简单的操作
+ * 当输入 this.dependencies.xxx时自动把package.json中的依赖带出来
+ * 当然这个例子没啥实际意义，仅仅是为了演示如何实现功能
+ * @param {*} document
+ * @param {*} position
+ * @param {*} token
+ * @param {*} context
+ */
+async function provideCompletionItemsForFishReduxDispatch(
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    token: vscode.CancellationToken,
+    context: vscode.CompletionContext
+) {
+    const workspaceFolders = vscode.workspace.workspaceFolders;
+    if (workspaceFolders != undefined && workspaceFolders.length > 0) {
+        const projectPath = workspaceFolders[0].uri.fsPath;
+        const line = document.lineAt(position);
+        // 只截取到光标位置为止，防止一些特殊情况
+        const lineText = line.text.substring(0, position.character);
+        // 简单匹配，只要当前光标前的字符串为`dispatch.`都自动带出所有的依赖
+        if (/dispatch\($/g.test(lineText)) {
+            var actionFileList = await vscode.workspace.findFiles(
+                new vscode.RelativePattern(projectPath, `**/action.dart`)
+            );
+            let actionFileListSize = actionFileList.length;
+            const list = new Array<ActionInfo>();
+            for (let index = 0; index < actionFileListSize; index++) {
+                const actionFile = actionFileList[index];
+                const actionDoc = await vscode.workspace.openTextDocument(
+                    actionFile
+                );
+                const actionCode = actionDoc.getText();
+                const rAction = new RegExp(
+                    `static[\\s].*Action[\\s]*([a-zA-Z0-9_].*)\\(.*\\)[\\s].*\\{[\\s].*return[const\\s].*Action\\(([a-zA-Z0-9]*Action.[a-zA-Z0-9_]*).*\\);[\\s].*\\}`,
+                    "gm"
+                );
+                const mActionCode = actionCode.match(rAction);
+                const mActionCreator = actionCode.match(
+                    /[a-zA-Z0-9]*ActionCreator/
+                );
+                if (mActionCode != null && mActionCreator != null) {
+                    for (
+                        let indexAction = 0;
+                        indexAction < mActionCode.length;
+                        indexAction++
+                    ) {
+                        const actionCode = mActionCode[indexAction];
+                        const rActionName = RegExp(
+                            "static[\\s].*Action[\\s]*([a-zA-Z0-9_].*)\\(",
+                            "gm"
+                        );
+                        const mActionName = rActionName.exec(actionCode);
+                        if (mActionName != null) {
+                            list.push(
+                                new ActionInfo(
+                                    `${mActionCreator[0]}.${mActionName[1]}`,
+                                    actionCode
+                                )
+                            );
+                        }
+                    }
+                }
+            }
+            const ciArr = list.map((actionInfo) => {
+                // vscode.CompletionItemKind 表示提示的类型
+                const ci = new vscode.CompletionItem(
+                    `${actionInfo.name}`,
+                    vscode.CompletionItemKind.Method
+                );
+                ci.sortText = '0'
+                ci.detail = `${actionInfo.actionCode}`;
+                ci.insertText = `${actionInfo.name}()`;
+                ci.documentation = `${actionInfo.name}`;
+                return ci;
+            });
+            return ciArr;
+        }
+    }
+}
+
+class ActionInfo {
+    name: string;
+    actionCode: string;
+
+    constructor(name: string, actionCode: string) {
+        this.name = name;
+        this.actionCode = actionCode;
+    }
 }
 
 async function providerDefinitionForFishReduxAction(
@@ -406,7 +509,7 @@ async function providerDefinitionForFishReduxAction(
             );
             let actionFileListSize = actionFileList.length;
             var searchAction = "";
-            actionLabel:for (var i = 0; i < actionFileListSize; i++) {
+            actionLabel: for (var i = 0; i < actionFileListSize; i++) {
                 const actionCodeDoc = await vscode.workspace.openTextDocument(
                     actionFileList[i]
                 );
