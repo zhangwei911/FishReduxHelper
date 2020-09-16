@@ -2,7 +2,7 @@
 	"name": "fishreduxhelper",
 	"displayName": "FishReduxHelper",
 	"description": "Fish Redux Helper",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"engines": {
 		"vscode": "^1.48.0"
 	},
@@ -12,7 +12,8 @@
 	"publisher": "wellchang",
 	"activationEvents": [
 		"onCommand:fishreduxhelper.addAction",
-		"onCommand:fishreduxhelper.addParams"
+		"onCommand:fishreduxhelper.addParams",
+		"onLanguage:dart"
 	],
 	"main": "./out/extension.js",
 	"contributes": {

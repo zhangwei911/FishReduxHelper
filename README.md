@@ -6,7 +6,12 @@ Fish Redux Helper
 ## Features
 
 Add Effect Function
+
 Add Reduce Function
+
+Jump To Effect/Reduce Function
+
+![img](https://github.com/zhangwei911/FishReduxHelper/blob/master/screenShots/jumpToAction.gif?raw=true)
 
 ## Requirements
 
@@ -40,6 +45,10 @@ add AddParams function
 ### 0.0.5
 
 fix Add Action Failed by format file
+
+### 0.0.6
+
+Jump To Effect/Reduce Function
 
 -----------------------------------------------------------------------------------------------------------
 

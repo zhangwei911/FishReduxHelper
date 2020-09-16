@@ -138,7 +138,7 @@ export function activate(context: vscode.ExtensionContext) {
                     ) {
                         var lineTextAction = actionCodeDoc.lineAt(indexAction)
                             .text;
-                        const r = /enum ([a-zA-Z0-9].*)[ ].*{.*/g;
+                        const r = /enum ([a-zA-Z0-9]*)[ ].*{.*/g;
                         const m = r.exec(lineTextAction);
                         if (m != null) {
                             actionEnumName = m[1];
@@ -150,17 +150,25 @@ export function activate(context: vscode.ExtensionContext) {
                             } else {
                                 isStartCheckAction = true;
                             }
-                        } else if(isStartCheckAction) {
-							if(lineTextAction.indexOf('}') != -1){
-                            	lineTextAction = lineTextAction.replace(
+                        } else if (isStartCheckAction) {
+                            if (lineTextAction.indexOf("}") != -1) {
+                                lineTextAction = lineTextAction.replace(
                                     "}",
-                                    `${lineTextAction.trim().length == 1?'':','}    ${actionName}\n}`
+                                    `${
+                                        lineTextAction.trim().length == 1
+                                            ? ""
+                                            : ","
+                                    }    ${actionName}\n}`
                                 );
-								if (actionCodeDoc.lineAt(indexAction-1).text.indexOf(',') == -1){
-									newActionCode += ','
-								}
-								isStartCheckAction = false;
-							}
+                                if (
+                                    actionCodeDoc
+                                        .lineAt(indexAction - 1)
+                                        .text.indexOf(",") == -1
+                                ) {
+                                    newActionCode += ",";
+                                }
+                                isStartCheckAction = false;
+                            }
                         }
                         if (indexAction > 0) {
                             newActionCode += "\n";
@@ -199,19 +207,19 @@ export function activate(context: vscode.ExtensionContext) {
                         const lineText = codeDoc.lineAt(index).text;
                         const r =
                             actionType == "effect"
-                                ? /\<Object, Effect\<([a-zA-Z0-9].*)State\>\>\{/g
-                                : /\<Object, Reducer\<([a-zA-Z0-9].*)State\>\>\{/g;
+                                ? /\<Object, Effect\<([a-zA-Z0-9]*)State\>\>\{/g
+                                : /\<Object, Reducer\<([a-zA-Z0-9]*)State\>\>\{/g;
                         const m = r.exec(lineText);
                         if (m != null) {
-							pageNamePrefix = m[1];
-							if(lineText.indexOf('}')!=-1){
-								lineText.replace(
+                            pageNamePrefix = m[1];
+                            if (lineText.indexOf("}") != -1) {
+                                lineText.replace(
                                     "}",
                                     `, ${pageNamePrefix}Action.${actionName}:_${actionName}`
                                 );
-							}else{
-								isStartCheck = true;
-							}
+                            } else {
+                                isStartCheck = true;
+                            }
                         } else if (isStartCheck) {
                             if (lineText.indexOf(":") == -1) {
                                 const lineTextPre = codeDoc.lineAt(index - 1)
@@ -319,7 +327,7 @@ export function activate(context: vscode.ExtensionContext) {
                     var isStartCheckClone = false;
                     for (var i = 0; i < lineCount; i++) {
                         var lineText = codeDoc.lineAt(i).text;
-                        const r = /class [a-zA-Z0-9].*State implements/g;
+                        const r = /class [a-zA-Z0-9]*State implements/g;
                         const m = r.exec(lineText);
                         if (m != null) {
                             isStartCheck = true;
@@ -330,7 +338,7 @@ export function activate(context: vscode.ExtensionContext) {
                             newCodeState += paramsCode;
                             isStartCheck = false;
                         } else {
-                            const rClone = /[a-zA-Z0-9].*State clone\(\) \{/g;
+                            const rClone = /[a-zA-Z0-9]*State clone\(\) \{/g;
                             const mClone = rClone.exec(lineText);
                             if (mClone != null) {
                                 isStartCheckClone = true;
@@ -362,6 +370,95 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(disposableAddParam);
+
+    context.subscriptions.push(
+        vscode.languages.registerDefinitionProvider(["dart"], {
+            provideDefinition: providerDefinitionForFishReduxAction,
+        })
+    );
+}
+
+async function providerDefinitionForFishReduxAction(
+    document: vscode.TextDocument,
+    position: vscode.Position,
+    token: vscode.CancellationToken
+) {
+    const fileName = document.fileName;
+    const workDir = path.dirname(fileName);
+    const word = document.getText(document.getWordRangeAtPosition(position));
+    const line = document.lineAt(position);
+    if (vscode.workspace.workspaceFolders != undefined) {
+        const projectPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
+
+        console.log("====== 进入 provideDefinition 方法 ======");
+        console.log("fileName: " + fileName); // 当前文件完整路径
+        console.log("workDir: " + workDir); // 当前文件所在目录
+        console.log("word: " + word); // 当前光标所在单词
+        console.log("line: " + line.text); // 当前光标所在行
+        console.log("projectPath: " + projectPath); // 当前工程目录
+        var rootPath = vscode.workspace.rootPath;
+        if (rootPath != undefined) {
+            var fileList = await vscode.workspace.findFiles(
+                new vscode.RelativePattern(rootPath, `**/{effect,reducer}.dart`)
+            );
+            var actionFileList = await vscode.workspace.findFiles(
+                new vscode.RelativePattern(rootPath, `**/action.dart`)
+            );
+            let actionFileListSize = actionFileList.length;
+            var searchAction = "";
+            for (var i = 0; i < actionFileListSize; i++) {
+                const actionCodeDoc = await vscode.workspace.openTextDocument(
+                    actionFileList[i]
+                );
+                const actionCode = actionCodeDoc.getText();
+                const r = new RegExp(
+                    `static[\\s]*Action[\\s]*${word}\\(\\)[\\s]*\\{[\\s]*return const Action\\(([a-zA-Z0-9]*Action.[a-zA-Z0-9_]*).*\\);[\\s]*\\}`,
+                    "gm"
+                );
+                const m = r.exec(actionCode);
+                if (m != null) {
+                    console.log(`searchAction ${m[1]}`);
+                    searchAction = m[1];
+                }
+            }
+            let fileListSize = fileList.length;
+            for (var i = 0; i < fileListSize; i++) {
+                const jumpCodeDoc = await vscode.workspace.openTextDocument(
+                    fileList[i]
+                );
+                const jumpCode = jumpCodeDoc.getText();
+                const r1 = new RegExp(
+                    `${searchAction}[\\s]*:[\\s]*([a-zA-Z0-9_]*)`,
+                    "gm"
+                );
+                const m1 = r1.exec(jumpCode);
+                if (m1 != null) {
+                    const action = m1[1];
+                    console.log(`action ${action}`);
+                    const lineCount = jumpCodeDoc.lineCount;
+                    var actionLine = 0;
+                    var actionIndex = 0;
+                    getLineLabel: for (var j = 0; j < lineCount; j++) {
+                        const lineText = jumpCodeDoc.lineAt(j).text;
+                        const r = new RegExp(`${action}[\\s]*\\(`);
+                        const m = r.exec(lineText);
+                        if (m != null) {
+                            actionLine = j;
+                            actionIndex = lineText.indexOf(`${action}`);
+                            break getLineLabel;
+                        }
+                    }
+                    console.log(
+                        `actionLine ${actionLine} actionIndex ${actionIndex}`
+                    );
+                    return new vscode.Location(
+                        fileList[i],
+                        new vscode.Position(actionLine, actionIndex)
+                    );
+                }
+            }
+        }
+    }
 }
 
 // this method is called when your extension is deactivated
