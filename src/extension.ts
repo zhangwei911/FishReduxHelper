@@ -406,7 +406,7 @@ async function providerDefinitionForFishReduxAction(
             );
             let actionFileListSize = actionFileList.length;
             var searchAction = "";
-            for (var i = 0; i < actionFileListSize; i++) {
+            actionLabel:for (var i = 0; i < actionFileListSize; i++) {
                 const actionCodeDoc = await vscode.workspace.openTextDocument(
                     actionFileList[i]
                 );
@@ -419,44 +419,47 @@ async function providerDefinitionForFishReduxAction(
                 if (m != null) {
                     console.log(`searchAction ${m[1]}`);
                     searchAction = m[1];
+                    break actionLabel;
                 }
             }
-            let fileListSize = fileList.length;
-            for (var i = 0; i < fileListSize; i++) {
-                const jumpCodeDoc = await vscode.workspace.openTextDocument(
-                    fileList[i]
-                );
-                const jumpCode = jumpCodeDoc.getText();
-                const r1 = new RegExp(
-                    `${searchAction}[\\s]*:[\\s]*([a-zA-Z0-9_]*)`,
-                    "gm"
-                );
-                const m1 = r1.exec(jumpCode);
-                if (m1 != null) {
-                    const action = m1[1];
-                    console.log(`action ${action}`);
-                    const lineCount = jumpCodeDoc.lineCount;
-                    var actionLine = 0;
-                    var actionIndex = 0;
-                    getLineLabel: for (var j = 0; j < lineCount; j++) {
-                        const lineText = jumpCodeDoc.lineAt(j).text;
-                        const r = new RegExp(
-                            `[\\S ].*${action}[\\s]*\\(.*\\)[async\\s].*\\{`
-                        );
-                        const m = r.exec(lineText);
-                        if (m != null) {
-                            actionLine = j;
-                            actionIndex = lineText.indexOf(`${action}`);
-                            break getLineLabel;
+            if (searchAction.length > 0) {
+                let fileListSize = fileList.length;
+                for (var i = 0; i < fileListSize; i++) {
+                    const jumpCodeDoc = await vscode.workspace.openTextDocument(
+                        fileList[i]
+                    );
+                    const jumpCode = jumpCodeDoc.getText();
+                    const r1 = new RegExp(
+                        `${searchAction}[\\s]*:[\\s]*([a-zA-Z0-9_]*)`,
+                        "gm"
+                    );
+                    const m1 = r1.exec(jumpCode);
+                    if (m1 != null) {
+                        const action = m1[1];
+                        console.log(`action ${action}`);
+                        const lineCount = jumpCodeDoc.lineCount;
+                        var actionLine = 0;
+                        var actionIndex = 0;
+                        getLineLabel: for (var j = 0; j < lineCount; j++) {
+                            const lineText = jumpCodeDoc.lineAt(j).text;
+                            const r = new RegExp(
+                                `[\\S ].*${action}[\\s]*\\(.*\\)[async\\s].*\\{`
+                            );
+                            const m = r.exec(lineText);
+                            if (m != null) {
+                                actionLine = j;
+                                actionIndex = lineText.indexOf(`${action}`);
+                                break getLineLabel;
+                            }
                         }
+                        console.log(
+                            `actionLine ${actionLine} actionIndex ${actionIndex}`
+                        );
+                        return new vscode.Location(
+                            fileList[i],
+                            new vscode.Position(actionLine, actionIndex)
+                        );
                     }
-                    console.log(
-                        `actionLine ${actionLine} actionIndex ${actionIndex}`
-                    );
-                    return new vscode.Location(
-                        fileList[i],
-                        new vscode.Position(actionLine, actionIndex)
-                    );
                 }
             }
         }

@@ -58,6 +58,10 @@ fix Jump To Effect/Reduce Function for action with params
 
 fix Jump To Effect/Reduce Function jump to comment
 
+### 0.0.9
+
+fix Jump To Effect/Reduce Function jump error
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown
