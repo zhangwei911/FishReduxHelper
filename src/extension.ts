@@ -440,7 +440,9 @@ async function providerDefinitionForFishReduxAction(
                     var actionIndex = 0;
                     getLineLabel: for (var j = 0; j < lineCount; j++) {
                         const lineText = jumpCodeDoc.lineAt(j).text;
-                        const r = new RegExp(`${action}[\\s]*\\(`);
+                        const r = new RegExp(
+                            `[\\S ].*${action}[\\s]*\\(.*\\)[async\\s].*\\{`
+                        );
                         const m = r.exec(lineText);
                         if (m != null) {
                             actionLine = j;
