@@ -50,6 +50,10 @@ fix Add Action Failed by format file
 
 Jump To Effect/Reduce Function
 
+### 0.0.7
+
+fix Jump To Effect/Reduce Function for action with params
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown
