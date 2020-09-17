@@ -2,7 +2,7 @@
 	"name": "fishreduxhelper",
 	"displayName": "FishReduxHelper",
 	"description": "Fish Redux Helper",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"engines": {
 		"vscode": "^1.48.0"
 	},
@@ -13,6 +13,14 @@
 	"activationEvents": [
 		"onCommand:fishreduxhelper.addAction",
 		"onCommand:fishreduxhelper.addParams",
+		"onCommand:fishreduxhelper.findView",
+		"onCommand:fishreduxhelper.findAction",
+		"onCommand:fishreduxhelper.findEffect",
+		"onCommand:fishreduxhelper.findReducer",
+		"onCommand:fishreduxhelper.findComponent",
+		"onCommand:fishreduxhelper.findAdapter",
+		"onCommand:fishreduxhelper.findPage",
+		"onCommand:fishreduxhelper.findState",
 		"onLanguage:dart"
 	],
 	"main": "./out/extension.js",
@@ -21,10 +29,33 @@
 			{
 				"command": "fishreduxhelper.addAction",
 				"title": "Fish Redux Helper: Add Action"
-			},
-			{
+			}, {
 				"command": "fishreduxhelper.addParams",
 				"title": "Fish Redux Helper: Add Params"
+			}, {
+				"command": "fishreduxhelper.findView",
+				"title": "Fish Redux Helper: Find View"
+			}, {
+				"command": "fishreduxhelper.findAction",
+				"title": "Fish Redux Helper: Find Action"
+			}, {
+				"command": "fishreduxhelper.findEffect",
+				"title": "Fish Redux Helper: Find Effect"
+			}, {
+				"command": "fishreduxhelper.findReducer",
+				"title": "Fish Redux Helper: Find Reducer"
+			}, {
+				"command": "fishreduxhelper.findComponent",
+				"title": "Fish Redux Helper: Find Component"
+			}, {
+				"command": "fishreduxhelper.findAdapter",
+				"title": "Fish Redux Helper: Find Adapter"
+			}, {
+				"command": "fishreduxhelper.findPage",
+				"title": "Fish Redux Helper: Find Page"
+			}, {
+				"command": "fishreduxhelper.findState",
+				"title": "Fish Redux Helper: Find State"
 			}
 		]
 	},

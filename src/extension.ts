@@ -4,6 +4,7 @@ import * as vscode from "vscode";
 import { SelectItem } from "./bean";
 import * as path from "path";
 import { stringToUint8Array } from "./utils";
+import { find } from "./function/find";
 import { randomBytes } from "crypto";
 
 // this method is called when your extension is activated
@@ -326,12 +327,14 @@ export function activate(context: vscode.ExtensionContext) {
                     }
                     var isStartCheck = false;
                     var isStartCheckClone = false;
+                    var canStartCheck = true;
                     for (var i = 0; i < lineCount; i++) {
                         var lineText = codeDoc.lineAt(i).text;
-                        const r = /class [a-zA-Z0-9]*State implements/g;
+                        const r = /\{/g;
                         const m = r.exec(lineText);
-                        if (m != null) {
+                        if (m != null && canStartCheck) {
                             isStartCheck = true;
+                            canStartCheck = false;
                         } else if (
                             isStartCheck &&
                             lineText.indexOf(";") === -1
@@ -387,6 +390,19 @@ export function activate(context: vscode.ExtensionContext) {
             "("
         )
     );
+    let findArr = [
+        { command: "findView", fileType: "view" },
+        { command: "findAction", fileType: "action" },
+        { command: "findEffect", fileType: "effect" },
+        { command: "findReducer", fileType: "reducer" },
+        { command: "findComponent", fileType: "component" },
+        { command: "findAdapter", fileType: "adapter" },
+        { command: "findPage", fileType: "page" },
+        { command: "findState", fileType: "state" },
+    ];
+    findArr.forEach((findInfo) => {
+        context.subscriptions.push(find(findInfo.command,findInfo.fileType));
+    });
 }
 
 /**
@@ -460,7 +476,7 @@ async function provideCompletionItemsForFishReduxDispatch(
                     `${actionInfo.name}`,
                     vscode.CompletionItemKind.Method
                 );
-                ci.sortText = '0'
+                ci.sortText = "0";
                 ci.detail = `${actionInfo.actionCode}`;
                 ci.insertText = `${actionInfo.name}()`;
                 ci.documentation = `${actionInfo.name}`;

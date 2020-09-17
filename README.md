@@ -9,12 +9,28 @@ Add Effect Function
 
 Add Reduce Function
 
+![img](https://github.com/zhangwei911/FishReduxHelper/blob/master/screenShots/addAction.gif?raw=true)
+
 Jump To Effect/Reduce Function
 
 ![img](https://github.com/zhangwei911/FishReduxHelper/blob/master/screenShots/jumpToAction.gif?raw=true)
 
 
 Auto Completion for dispatch
+
+![img](https://github.com/zhangwei911/FishReduxHelper/blob/master/screenShots/completion.gif?raw=true)
+
+Add Follow Function :
+findView
+findAction
+findEffect
+findReducer
+findComponent
+findAdapter
+findPage
+findState
+
+![img](https://github.com/zhangwei911/FishReduxHelper/blob/master/screenShots/find.gif?raw=true)
 
 ## Requirements
 
@@ -68,6 +84,19 @@ fix Jump To Effect/Reduce Function jump error
 ### 0.0.10
 
 Auto Completion for dispatch
+
+### 0.0.11
+
+fix add params to state bug
+Add Follow Function :
+findView
+findAction
+findEffect
+findReducer
+findComponent
+findAdapter
+findPage
+findState
 
 -----------------------------------------------------------------------------------------------------------
 
