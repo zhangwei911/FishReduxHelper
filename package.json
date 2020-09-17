@@ -10,6 +10,7 @@
 		"Other"
 	],
 	"publisher": "wellchang",
+	"repository": "https://github.com/zhangwei911/FishReduxHelper.git",
 	"activationEvents": [
 		"onCommand:fishreduxhelper.addAction",
 		"onCommand:fishreduxhelper.addParams",
