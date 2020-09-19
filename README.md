@@ -98,6 +98,10 @@ findAdapter
 findPage
 findState
 
+### 0.0.12
+
+fix Add Action Failed by format file
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown
