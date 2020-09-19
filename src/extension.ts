@@ -24,12 +24,12 @@ export function activate(context: vscode.ExtensionContext) {
         async () => {
             // The code you place here will be executed every time your command is executed
             var rootPath = vscode.workspace.rootPath;
-            if (rootPath != undefined) {
+            if (rootPath !== undefined) {
                 let selectActionType = await vscode.window.showQuickPick([
                     "Effect",
                     "Reducer",
                 ]);
-                if (selectActionType == undefined) {
+                if (selectActionType === undefined) {
                     return;
                 }
                 var actionType = selectActionType.toLowerCase();
@@ -53,23 +53,23 @@ export function activate(context: vscode.ExtensionContext) {
                 let selectItem = await vscode.window.showQuickPick(
                     fileSelectList
                 );
-                if (selectItem == undefined) {
+                if (selectItem === undefined) {
                     return;
                 }
                 let actionNamePrefix = await vscode.window.showInputBox({
                     placeHolder: "请输入操作名,如test",
                 });
-                if (actionNamePrefix == undefined) {
+                if (actionNamePrefix === undefined) {
                     return;
                 }
                 let selectIsAddParams = await vscode.window.showQuickPick([
                     "添加参数",
                     "不添加参数",
                 ]);
-                if (selectIsAddParams == undefined) {
+                if (selectIsAddParams === undefined) {
                     return;
                 }
-                let isAddParams = selectIsAddParams == "添加参数";
+                let isAddParams = selectIsAddParams === "添加参数";
                 var params;
                 var payload;
                 var payloadList = new Array<string>();
@@ -78,10 +78,10 @@ export function activate(context: vscode.ExtensionContext) {
                     params = await vscode.window.showInputBox({
                         placeHolder: "请输入参数,如String msg,int index",
                     });
-                    if (params == undefined) {
+                    if (params === undefined) {
                         return;
                     }
-                    if (params.indexOf(",") == -1) {
+                    if (params.indexOf(",") === -1) {
                         let param = params.split(" ")[1];
                         payload = param;
                         payloadList.push(`\n${params} = action.payload;`);
@@ -114,7 +114,7 @@ export function activate(context: vscode.ExtensionContext) {
                 }
 
                 let actionName = `${actionNamePrefix}${selectActionType}Action`;
-                if (selectItem?.description != undefined) {
+                if (selectItem?.description !== undefined) {
                     let codePromise = vscode.workspace.openTextDocument(
                         vscode.Uri.parse(selectItem?.description)
                     );
@@ -142,7 +142,7 @@ export function activate(context: vscode.ExtensionContext) {
                             .text;
                         const r = /enum ([a-zA-Z0-9]*)[\s]*[\{]{0,1}/g;
                         const m = r.exec(lineTextAction);
-                        if (m != null) {
+                        if (m !== null) {
                             actionEnumName = m[1];
                             if (lineTextAction.endsWith("}")) {
                                 lineTextAction = lineTextAction.replace(
@@ -153,11 +153,11 @@ export function activate(context: vscode.ExtensionContext) {
                                 isStartCheckAction = true;
                             }
                         } else if (isStartCheckAction) {
-                            if (lineTextAction.indexOf("}") != -1) {
+                            if (lineTextAction.indexOf("}") !== -1) {
                                 lineTextAction = lineTextAction.replace(
                                     "}",
                                     `${
-                                        lineTextAction.trim().length == 1
+                                        lineTextAction.trim().length === 1
                                             ? ""
                                             : ","
                                     }    ${actionName}\n}`
@@ -165,7 +165,7 @@ export function activate(context: vscode.ExtensionContext) {
                                 if (
                                     actionCodeDoc
                                         .lineAt(indexAction - 1)
-                                        .text.indexOf(",") == -1
+                                        .text.indexOf(",") === -1
                                 ) {
                                     newActionCode += ",";
                                 }
@@ -208,13 +208,13 @@ export function activate(context: vscode.ExtensionContext) {
                     for (let index = 0; index < lineCount; index++) {
                         const lineText = codeDoc.lineAt(index).text;
                         const r =
-                            actionType == "effect"
+                            actionType === "effect"
                                 ? /\<Object, Effect\<([a-zA-Z0-9]*)State\>\>[\s]*\{/g
                                 : /\<Object, Reducer\<([a-zA-Z0-9]*)State\>\>[\s]*\{/g;
                         const m = r.exec(lineText);
-                        if (m != null) {
+                        if (m !== null) {
                             pageNamePrefix = m[1];
-                            if (lineText.indexOf("}") != -1) {
+                            if (lineText.indexOf("}") !== -1) {
                                 lineText.replace(
                                     "}",
                                     `, ${pageNamePrefix}Action.${actionName}:_${actionName}`
@@ -223,10 +223,10 @@ export function activate(context: vscode.ExtensionContext) {
                                 isStartCheck = true;
                             }
                         } else if (isStartCheck) {
-                            if (lineText.indexOf(":") == -1 && lineText.indexOf('}') != -1) {
+                            if (lineText.indexOf(":") === -1 && lineText.indexOf('}') !== -1) {
                                 const lineTextPre = codeDoc.lineAt(index - 1)
                                     .text;
-                                const addComma = lineTextPre.indexOf(",") == -1;
+                                const addComma = lineTextPre.indexOf(",") === -1;
                                 if (addComma) {
                                     newCode += ",";
                                 }
@@ -235,9 +235,9 @@ export function activate(context: vscode.ExtensionContext) {
                             }
                         } else {
                         }
-                        if (index == lineCount - 1) {
+                        if (index === lineCount - 1) {
                             let stateName = `${pageNamePrefix}State`;
-                            if (actionType == "effect") {
+                            if (actionType === "effect") {
                                 newCode += `\n\nvoid _${actionName}(Action action, Context<${stateName}> ctx) {${
                                     isAddParams ? payloadCode : ""
                                 }}`;
@@ -272,7 +272,7 @@ export function activate(context: vscode.ExtensionContext) {
         "fishreduxhelper.addParams",
         async () => {
             var rootPath = vscode.workspace.rootPath;
-            if (rootPath != undefined) {
+            if (rootPath !== undefined) {
                 var fileList = await vscode.workspace.findFiles(
                     new vscode.RelativePattern(rootPath, `**/state.dart`)
                 );
@@ -288,10 +288,10 @@ export function activate(context: vscode.ExtensionContext) {
                 let selectItem = await vscode.window.showQuickPick(
                     fileSelectList
                 );
-                if (selectItem == undefined) {
+                if (selectItem === undefined) {
                     return;
                 }
-                if (selectItem?.description != undefined) {
+                if (selectItem?.description !== undefined) {
                     let codePromise = vscode.workspace.openTextDocument(
                         vscode.Uri.parse(selectItem?.description)
                     );
@@ -332,7 +332,7 @@ export function activate(context: vscode.ExtensionContext) {
                         var lineText = codeDoc.lineAt(i).text;
                         const r = /\{/g;
                         const m = r.exec(lineText);
-                        if (m != null && canStartCheck) {
+                        if (m !== null && canStartCheck) {
                             isStartCheck = true;
                             canStartCheck = false;
                         } else if (
@@ -344,7 +344,7 @@ export function activate(context: vscode.ExtensionContext) {
                         } else {
                             const rClone = /[a-zA-Z0-9]*State clone\(\) \{/g;
                             const mClone = rClone.exec(lineText);
-                            if (mClone != null) {
+                            if (mClone !== null) {
                                 isStartCheckClone = true;
                             } else if (
                                 isStartCheckClone &&
@@ -421,7 +421,7 @@ async function provideCompletionItemsForFishReduxDispatch(
     context: vscode.CompletionContext
 ) {
     const workspaceFolders = vscode.workspace.workspaceFolders;
-    if (workspaceFolders != undefined && workspaceFolders.length > 0) {
+    if (workspaceFolders !== undefined && workspaceFolders.length > 0) {
         const projectPath = workspaceFolders[0].uri.fsPath;
         const line = document.lineAt(position);
         // 只截取到光标位置为止，防止一些特殊情况
@@ -447,7 +447,7 @@ async function provideCompletionItemsForFishReduxDispatch(
                 const mActionCreator = actionCode.match(
                     /[a-zA-Z0-9]*ActionCreator/
                 );
-                if (mActionCode != null && mActionCreator != null) {
+                if (mActionCode !== null && mActionCreator !== null) {
                     for (
                         let indexAction = 0;
                         indexAction < mActionCode.length;
@@ -459,7 +459,7 @@ async function provideCompletionItemsForFishReduxDispatch(
                             "gm"
                         );
                         const mActionName = rActionName.exec(actionCode);
-                        if (mActionName != null) {
+                        if (mActionName !== null) {
                             list.push(
                                 new ActionInfo(
                                     `${mActionCreator[0]}.${mActionName[1]}`,
@@ -506,7 +506,7 @@ async function providerDefinitionForFishReduxAction(
     const workDir = path.dirname(fileName);
     const word = document.getText(document.getWordRangeAtPosition(position));
     const line = document.lineAt(position);
-    if (vscode.workspace.workspaceFolders != undefined) {
+    if (vscode.workspace.workspaceFolders !== undefined) {
         const projectPath = vscode.workspace.workspaceFolders[0].uri.fsPath;
 
         console.log("====== 进入 provideDefinition 方法 ======");
@@ -516,7 +516,7 @@ async function providerDefinitionForFishReduxAction(
         console.log("line: " + line.text); // 当前光标所在行
         console.log("projectPath: " + projectPath); // 当前工程目录
         var rootPath = vscode.workspace.rootPath;
-        if (rootPath != undefined) {
+        if (rootPath !== undefined) {
             var fileList = await vscode.workspace.findFiles(
                 new vscode.RelativePattern(rootPath, `**/{effect,reducer}.dart`)
             );
@@ -535,7 +535,7 @@ async function providerDefinitionForFishReduxAction(
                     "gm"
                 );
                 const m = r.exec(actionCode);
-                if (m != null) {
+                if (m !== null) {
                     console.log(`searchAction ${m[1]}`);
                     searchAction = m[1];
                     break actionLabel;
@@ -553,7 +553,7 @@ async function providerDefinitionForFishReduxAction(
                         "gm"
                     );
                     const m1 = r1.exec(jumpCode);
-                    if (m1 != null) {
+                    if (m1 !== null) {
                         const action = m1[1];
                         console.log(`action ${action}`);
                         const lineCount = jumpCodeDoc.lineCount;
@@ -565,7 +565,7 @@ async function providerDefinitionForFishReduxAction(
                                 `[\\S ].*${action}[\\s]*\\(.*\\)[async\\s].*\\{`
                             );
                             const m = r.exec(lineText);
-                            if (m != null) {
+                            if (m !== null) {
                                 actionLine = j;
                                 actionIndex = lineText.indexOf(`${action}`);
                                 break getLineLabel;

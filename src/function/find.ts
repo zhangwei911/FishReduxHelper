@@ -7,7 +7,7 @@ export function find(command: string, fileType: string) {
         `fishreduxhelper.${command}`,
         async () => {
             const workspaceFolders = vscode.workspace.workspaceFolders;
-            if (workspaceFolders != undefined && workspaceFolders.length > 0) {
+            if (workspaceFolders !== undefined && workspaceFolders.length > 0) {
                 const projectPath = workspaceFolders[0].uri.fsPath;
                 var fileList = await vscode.workspace.findFiles(
                     new vscode.RelativePattern(
@@ -26,10 +26,10 @@ export function find(command: string, fileType: string) {
                 let selectItem = await vscode.window.showQuickPick(
                     fileSelectList
                 );
-                if (selectItem == undefined) {
+                if (selectItem === undefined) {
                     return;
                 }
-                if (selectItem?.description != undefined) {
+                if (selectItem?.description !== undefined) {
                     let doc = await vscode.workspace.openTextDocument(
                         vscode.Uri.parse(selectItem?.description)
                     );
