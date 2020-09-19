@@ -209,8 +209,8 @@ export function activate(context: vscode.ExtensionContext) {
                         const lineText = codeDoc.lineAt(index).text;
                         const r =
                             actionType == "effect"
-                                ? /\<Object, Effect\<([a-zA-Z0-9]*)State\>\>\{/g
-                                : /\<Object, Reducer\<([a-zA-Z0-9]*)State\>\>\{/g;
+                                ? /\<Object, Effect\<([a-zA-Z0-9]*)State\>\>[\s]*\{/g
+                                : /\<Object, Reducer\<([a-zA-Z0-9]*)State\>\>[\s]*\{/g;
                         const m = r.exec(lineText);
                         if (m != null) {
                             pageNamePrefix = m[1];
@@ -223,7 +223,7 @@ export function activate(context: vscode.ExtensionContext) {
                                 isStartCheck = true;
                             }
                         } else if (isStartCheck) {
-                            if (lineText.indexOf(":") == -1) {
+                            if (lineText.indexOf(":") == -1 && lineText.indexOf('}') != -1) {
                                 const lineTextPre = codeDoc.lineAt(index - 1)
                                     .text;
                                 const addComma = lineTextPre.indexOf(",") == -1;
