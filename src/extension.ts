@@ -140,7 +140,7 @@ export function activate(context: vscode.ExtensionContext) {
                     ) {
                         var lineTextAction = actionCodeDoc.lineAt(indexAction)
                             .text;
-                        const r = /enum ([a-zA-Z0-9]*)[ ].*{.*/g;
+                        const r = /enum ([a-zA-Z0-9]*)[\s]*[\{]{0,1}/g;
                         const m = r.exec(lineTextAction);
                         if (m != null) {
                             actionEnumName = m[1];
