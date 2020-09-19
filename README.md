@@ -1,7 +1,6 @@
-[![version](https://img.shields.io/vscode-marketplace/v/wellchang.fishreduxhelper.svg?style=flat-square&label=vscode%20marketplace)](https://marketplace.visualstudio.com/items?itemName=wellchang.fishreduxhelper)
 # fishreduxhelper
 
-Fish Redux Helper
+Fish Redux Helper [![version](https://img.shields.io/vscode-marketplace/v/wellchang.fishreduxhelper.svg?style=flat-square&label=vscode%20marketplace)](https://marketplace.visualstudio.com/items?itemName=wellchang.fishreduxhelper)
 
 ## Features
 
@@ -14,7 +13,6 @@ Add Reduce Function
 Jump To Effect/Reduce Function
 
 ![img](https://github.com/zhangwei911/FishReduxHelper/blob/master/screenShots/jumpToAction.gif?raw=true)
-
 
 Auto Completion for dispatch
 
@@ -34,16 +32,11 @@ findState
 
 ## Requirements
 
-
 ## Extension Settings
-
 
 ## Known Issues
 
-
 ## Release Notes
-
-
 
 ### 0.0.1
 
@@ -106,8 +99,6 @@ fix Add Action Failed by format file
 
 ## Working with Markdown
 
-
 ### For more information
-
 
 **Enjoy!**
