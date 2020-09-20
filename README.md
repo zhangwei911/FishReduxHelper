@@ -101,6 +101,10 @@ fix Add Action Failed by format file
 
 use vscode.workspace.applyEdit instead of vscode.workspace.fs.writeFile
 
+### 0.0.14
+
+optimise dispatch auto completion
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown

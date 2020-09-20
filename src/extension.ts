@@ -443,8 +443,10 @@ async function provideCompletionItemsForFishReduxDispatch(
                 );
                 ci.sortText = "0";
                 ci.detail = `${actionInfo.actionCode}`;
-                ci.insertText = `${actionInfo.name}()`;
+                let ss = new vscode.SnippetString(`${actionInfo.name}($0));`);
+                ci.insertText = ss;
                 ci.documentation = `${actionInfo.name}`;
+                ci.range = new vscode.Range(new vscode.Position(position.line,position.character),new vscode.Position(position.line,line.range.end.character));
                 return ci;
             });
             return ciArr;
