@@ -95,6 +95,12 @@ findState
 
 fix Add Action Failed by format file
 
+### 0.0.13
+
+fix Add Action Failed by format file
+
+use vscode.workspace.applyEdit instead of vscode.workspace.fs.writeFile
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown

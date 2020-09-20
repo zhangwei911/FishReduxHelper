@@ -39,7 +39,6 @@ export function activate(context: vscode.ExtensionContext) {
                         `**/{${actionType},action}.dart`
                     )
                 );
-                let fileListSize = fileList.length;
                 let fileSelectList = new Array<SelectItem>();
                 fileList.forEach((element: vscode.Uri) => {
                     if (element.path.endsWith(`${actionType}.dart`)) {
@@ -115,24 +114,25 @@ export function activate(context: vscode.ExtensionContext) {
 
                 let actionName = `${actionNamePrefix}${selectActionType}Action`;
                 if (selectItem?.description !== undefined) {
+                    let codeUri = vscode.Uri.parse(selectItem?.description);
                     let codePromise = vscode.workspace.openTextDocument(
-                        vscode.Uri.parse(selectItem?.description)
+                        codeUri
+                    );
+                    let actionUri = vscode.Uri.parse(
+                        selectItem?.description.replace(
+                            `${actionType}.dart`,
+                            "action.dart"
+                        )
                     );
                     let actionCodePromise = vscode.workspace.openTextDocument(
-                        vscode.Uri.parse(
-                            selectItem?.description.replace(
-                                `${actionType}.dart`,
-                                "action.dart"
-                            )
-                        )
+                        actionUri
                     );
                     //处理Action
                     let actionCodeDoc = await actionCodePromise;
-                    let actionCode = actionCodeDoc.getText();
                     let actionLineCount = actionCodeDoc.lineCount;
                     var actionEnumName = "";
-                    var newActionCode = "";
                     var isStartCheckAction = false;
+                    let wordspaceEditAction = new vscode.WorkspaceEdit();
                     for (
                         let indexAction = 0;
                         indexAction < actionLineCount;
@@ -145,66 +145,41 @@ export function activate(context: vscode.ExtensionContext) {
                         if (m !== null) {
                             actionEnumName = m[1];
                             if (lineTextAction.endsWith("}")) {
-                                lineTextAction = lineTextAction.replace(
-                                    "}",
-                                    `, ${actionName}}`
-                                );
+                                wordspaceEditAction.insert(actionUri, new vscode.Position(indexAction, actionCodeDoc.lineAt(indexAction).range.end.character - 1), `, ${actionName}`);
                             } else {
                                 isStartCheckAction = true;
                             }
                         } else if (isStartCheckAction) {
                             if (lineTextAction.indexOf("}") !== -1) {
-                                lineTextAction = lineTextAction.replace(
-                                    "}",
-                                    `${
-                                        lineTextAction.trim().length === 1
-                                            ? ""
-                                            : ","
-                                    }    ${actionName}\n}`
-                                );
-                                if (
+                                isStartCheckAction = false;
+                                wordspaceEditAction.insert(actionUri, actionCodeDoc.lineAt(indexAction - 1).range.end,
                                     actionCodeDoc
                                         .lineAt(indexAction - 1)
-                                        .text.indexOf(",") === -1
-                                ) {
-                                    newActionCode += ",";
-                                }
-                                isStartCheckAction = false;
+                                        .text.indexOf(",") === -1 ? ',' : '');
+                                wordspaceEditAction.insert(actionUri, new vscode.Position(indexAction, actionCodeDoc.lineAt(indexAction).range.end.character - 1),
+                                    `${lineTextAction.trim().length === 1
+                                        ? ""
+                                        : ","
+                                    }    ${actionName}\n`);
                             }
                         }
-                        if (indexAction > 0) {
-                            newActionCode += "\n";
-                        }
-                        newActionCode += `${lineTextAction}`;
                     }
-
-                    newActionCode =
-                        newActionCode.substring(
-                            0,
-                            newActionCode.lastIndexOf("}")
-                        ) +
-                        `\n  static Action ${actionNamePrefix}(${
-                            isAddParams ? params : ""
-                        }) {\n    return Action(${actionEnumName}.${actionName}${
-                            isAddParams ? `, payload: ${payload}` : ""
-                        });\n  }\n}`;
-
-                    vscode.workspace.fs.writeFile(
-                        vscode.Uri.parse(
-                            selectItem?.description.replace(
-                                `${actionType}.dart`,
-                                "action.dart"
-                            )
-                        ),
-                        stringToUint8Array(newActionCode)
-                    );
+                    for (let indexAction = actionLineCount - 1; indexAction < actionLineCount; indexAction--) {
+                        let lineTextAction = actionCodeDoc.lineAt(indexAction).text;
+                        if (lineTextAction.indexOf('}') !== -1) {
+                            wordspaceEditAction.insert(actionUri, new vscode.Position(indexAction, lineTextAction.lastIndexOf('}')), `\n  static Action ${actionNamePrefix}(${isAddParams ? params : ""
+                                }) {\n    return Action(${actionEnumName}.${actionName}${isAddParams ? `, payload: ${payload}` : ""
+                                });\n  }\n`);
+                            break;
+                        }
+                    }
+                    vscode.workspace.applyEdit(wordspaceEditAction);
                     //处理Code
                     let codeDoc = await codePromise;
-                    var code = codeDoc.getText();
                     let lineCount = codeDoc.lineCount;
                     var isStartCheck = false;
-                    var newCode = "";
                     var pageNamePrefix = "";
+                    let wordspaceEditCode = new vscode.WorkspaceEdit();
                     for (let index = 0; index < lineCount; index++) {
                         const lineText = codeDoc.lineAt(index).text;
                         const r =
@@ -215,53 +190,40 @@ export function activate(context: vscode.ExtensionContext) {
                         if (m !== null) {
                             pageNamePrefix = m[1];
                             if (lineText.indexOf("}") !== -1) {
-                                lineText.replace(
-                                    "}",
-                                    `, ${pageNamePrefix}Action.${actionName}:_${actionName}`
-                                );
+                                wordspaceEditCode.insert(codeUri, new vscode.Position(index, codeDoc.lineAt(index).range.end.character - 1), `, ${pageNamePrefix}Action.${actionName}:_${actionName}`);
                             } else {
                                 isStartCheck = true;
                             }
                         } else if (isStartCheck) {
-                            if (lineText.indexOf(":") === -1 && lineText.indexOf('}') !== -1) {
-                                const lineTextPre = codeDoc.lineAt(index - 1)
-                                    .text;
-                                const addComma = lineTextPre.indexOf(",") === -1;
-                                if (addComma) {
-                                    newCode += ",";
-                                }
-                                newCode += `\n${pageNamePrefix}Action.${actionName}:_${actionName}`;
+                            if (lineText.indexOf('}') !== -1) {
                                 isStartCheck = false;
+                                wordspaceEditCode.insert(codeUri, codeDoc.lineAt(index - 1).range.end,
+                                    codeDoc
+                                        .lineAt(index - 1)
+                                        .text.indexOf(",") === -1 ? ',' : '');
+                                wordspaceEditCode.insert(codeUri, new vscode.Position(index, lineText.indexOf('}')),
+                                    `${pageNamePrefix}Action.${actionName}:_${actionName}\n`);
                             }
                         } else {
                         }
                         if (index === lineCount - 1) {
                             let stateName = `${pageNamePrefix}State`;
                             if (actionType === "effect") {
-                                newCode += `\n\nvoid _${actionName}(Action action, Context<${stateName}> ctx) {${
-                                    isAddParams ? payloadCode : ""
-                                }}`;
+                                wordspaceEditCode.insert(codeUri, new vscode.Position(index, codeDoc.lineAt(index).range.end.character),
+                                    `\n\nvoid _${actionName}(Action action, Context<${stateName}> ctx) {${isAddParams ? payloadCode : ""
+                                    }}`);
                             } else {
-                                newCode += `\n\n${stateName} _${actionName}(${stateName} state, Action action) {\n  ${stateName} newState = state.clone();${
-                                    isAddParams ? payloadCode : ""
-                                }\n  return newState;\n}`;
+                                wordspaceEditCode.insert(codeUri, new vscode.Position(index, codeDoc.lineAt(index).range.end.character),
+                                    `\n\n${stateName} _${actionName}(${stateName} state, Action action) {\n  ${stateName} newState = state.clone();${isAddParams ? payloadCode : ""
+                                    }\n  return newState;\n}`);
                             }
                         }
-                        if (index > 0) {
-                            newCode += "\n";
-                        }
-                        newCode += `${lineText}`;
                     }
-
-                    vscode.workspace.fs.writeFile(
-                        vscode.Uri.parse(selectItem?.description),
-                        stringToUint8Array(newCode)
-                    );
+                    vscode.workspace.applyEdit(wordspaceEditCode);
                 }
             }
-            // Display a message box to the user
             vscode.window.showInformationMessage(
-                "Hello World from FishReduxHelper!"
+                "Add Action Success!"
             );
         }
     );
@@ -370,6 +332,9 @@ export function activate(context: vscode.ExtensionContext) {
                     );
                 }
             }
+            vscode.window.showInformationMessage(
+                "Add Params Success!"
+            );
         }
     );
 
@@ -401,7 +366,7 @@ export function activate(context: vscode.ExtensionContext) {
         { command: "findState", fileType: "state" },
     ];
     findArr.forEach((findInfo) => {
-        context.subscriptions.push(find(findInfo.command,findInfo.fileType));
+        context.subscriptions.push(find(findInfo.command, findInfo.fileType));
     });
 }
 
@@ -586,4 +551,4 @@ async function providerDefinitionForFishReduxAction(
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }

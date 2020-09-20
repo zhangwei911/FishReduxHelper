@@ -1682,7 +1682,7 @@ v8-compile-cache@^2.0.3:
 
 vsce@^1.79.5:
   version "1.79.5"
-  resolved "https://registry.npm.taobao.org/vsce/download/vsce-1.79.5.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fvsce%2Fdownload%2Fvsce-1.79.5.tgz#622d947aed97632d460e68ec774eac41f550102d"
+  resolved "https://registry.npm.taobao.org/vsce/download/vsce-1.79.5.tgz#622d947aed97632d460e68ec774eac41f550102d"
   integrity sha1-Yi2Ueu2XYy1GDmjsd06sQfVQEC0=
   dependencies:
     azure-devops-node-api "^7.2.0"
