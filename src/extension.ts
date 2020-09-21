@@ -145,31 +145,67 @@ export function activate(context: vscode.ExtensionContext) {
                         if (m !== null) {
                             actionEnumName = m[1];
                             if (lineTextAction.endsWith("}")) {
-                                wordspaceEditAction.insert(actionUri, new vscode.Position(indexAction, actionCodeDoc.lineAt(indexAction).range.end.character - 1), `, ${actionName}`);
+                                wordspaceEditAction.insert(
+                                    actionUri,
+                                    new vscode.Position(
+                                        indexAction,
+                                        actionCodeDoc.lineAt(indexAction).range
+                                            .end.character - 1
+                                    ),
+                                    `, ${actionName}`
+                                );
                             } else {
                                 isStartCheckAction = true;
                             }
                         } else if (isStartCheckAction) {
                             if (lineTextAction.indexOf("}") !== -1) {
                                 isStartCheckAction = false;
-                                wordspaceEditAction.insert(actionUri, actionCodeDoc.lineAt(indexAction - 1).range.end,
+                                wordspaceEditAction.insert(
+                                    actionUri,
+                                    actionCodeDoc.lineAt(indexAction - 1).range
+                                        .end,
                                     actionCodeDoc
                                         .lineAt(indexAction - 1)
-                                        .text.indexOf(",") === -1 ? ',' : '');
-                                wordspaceEditAction.insert(actionUri, new vscode.Position(indexAction, actionCodeDoc.lineAt(indexAction).range.end.character - 1),
-                                    `${lineTextAction.trim().length === 1
-                                        ? ""
-                                        : ","
-                                    }    ${actionName}\n`);
+                                        .text.indexOf(",") === -1
+                                        ? ","
+                                        : ""
+                                );
+                                wordspaceEditAction.insert(
+                                    actionUri,
+                                    new vscode.Position(
+                                        indexAction,
+                                        actionCodeDoc.lineAt(indexAction).range
+                                            .end.character - 1
+                                    ),
+                                    `${
+                                        lineTextAction.trim().length === 1
+                                            ? ""
+                                            : ","
+                                    }    ${actionName}\n`
+                                );
                             }
                         }
                     }
-                    for (let indexAction = actionLineCount - 1; indexAction < actionLineCount; indexAction--) {
-                        let lineTextAction = actionCodeDoc.lineAt(indexAction).text;
-                        if (lineTextAction.indexOf('}') !== -1) {
-                            wordspaceEditAction.insert(actionUri, new vscode.Position(indexAction, lineTextAction.lastIndexOf('}')), `\n  static Action ${actionNamePrefix}(${isAddParams ? params : ""
-                                }) {\n    return Action(${actionEnumName}.${actionName}${isAddParams ? `, payload: ${payload}` : ""
-                                });\n  }\n`);
+                    for (
+                        let indexAction = actionLineCount - 1;
+                        indexAction < actionLineCount;
+                        indexAction--
+                    ) {
+                        let lineTextAction = actionCodeDoc.lineAt(indexAction)
+                            .text;
+                        if (lineTextAction.indexOf("}") !== -1) {
+                            wordspaceEditAction.insert(
+                                actionUri,
+                                new vscode.Position(
+                                    indexAction,
+                                    lineTextAction.lastIndexOf("}")
+                                ),
+                                `\n  static Action ${actionNamePrefix}(${
+                                    isAddParams ? params : ""
+                                }) {\n    return Action(${actionEnumName}.${actionName}${
+                                    isAddParams ? `, payload: ${payload}` : ""
+                                });\n  }\n`
+                            );
                             break;
                         }
                     }
@@ -190,41 +226,76 @@ export function activate(context: vscode.ExtensionContext) {
                         if (m !== null) {
                             pageNamePrefix = m[1];
                             if (lineText.indexOf("}") !== -1) {
-                                wordspaceEditCode.insert(codeUri, new vscode.Position(index, codeDoc.lineAt(index).range.end.character - 1), `, ${pageNamePrefix}Action.${actionName}:_${actionName}`);
+                                wordspaceEditCode.insert(
+                                    codeUri,
+                                    new vscode.Position(
+                                        index,
+                                        codeDoc.lineAt(index).range.end
+                                            .character - 1
+                                    ),
+                                    `, ${pageNamePrefix}Action.${actionName}:_${actionName}`
+                                );
                             } else {
                                 isStartCheck = true;
                             }
                         } else if (isStartCheck) {
-                            if (lineText.indexOf('}') !== -1) {
+                            if (lineText.indexOf("}") !== -1) {
                                 isStartCheck = false;
-                                wordspaceEditCode.insert(codeUri, codeDoc.lineAt(index - 1).range.end,
+                                wordspaceEditCode.insert(
+                                    codeUri,
+                                    codeDoc.lineAt(index - 1).range.end,
                                     codeDoc
                                         .lineAt(index - 1)
-                                        .text.indexOf(",") === -1 ? ',' : '');
-                                wordspaceEditCode.insert(codeUri, new vscode.Position(index, lineText.indexOf('}')),
-                                    `${pageNamePrefix}Action.${actionName}:_${actionName}\n`);
+                                        .text.indexOf(",") === -1
+                                        ? ","
+                                        : ""
+                                );
+                                wordspaceEditCode.insert(
+                                    codeUri,
+                                    new vscode.Position(
+                                        index,
+                                        lineText.indexOf("}")
+                                    ),
+                                    `${pageNamePrefix}Action.${actionName}:_${actionName}\n`
+                                );
                             }
                         } else {
                         }
                         if (index === lineCount - 1) {
                             let stateName = `${pageNamePrefix}State`;
                             if (actionType === "effect") {
-                                wordspaceEditCode.insert(codeUri, new vscode.Position(index, codeDoc.lineAt(index).range.end.character),
-                                    `\n\nvoid _${actionName}(Action action, Context<${stateName}> ctx) {${isAddParams ? payloadCode : ""
-                                    }}`);
+                                wordspaceEditCode.insert(
+                                    codeUri,
+                                    new vscode.Position(
+                                        index,
+                                        codeDoc.lineAt(
+                                            index
+                                        ).range.end.character
+                                    ),
+                                    `\n\nvoid _${actionName}(Action action, Context<${stateName}> ctx) {${
+                                        isAddParams ? payloadCode : ""
+                                    }}`
+                                );
                             } else {
-                                wordspaceEditCode.insert(codeUri, new vscode.Position(index, codeDoc.lineAt(index).range.end.character),
-                                    `\n\n${stateName} _${actionName}(${stateName} state, Action action) {\n  ${stateName} newState = state.clone();${isAddParams ? payloadCode : ""
-                                    }\n  return newState;\n}`);
+                                wordspaceEditCode.insert(
+                                    codeUri,
+                                    new vscode.Position(
+                                        index,
+                                        codeDoc.lineAt(
+                                            index
+                                        ).range.end.character
+                                    ),
+                                    `\n\n${stateName} _${actionName}(${stateName} state, Action action) {\n  ${stateName} newState = state.clone();${
+                                        isAddParams ? payloadCode : ""
+                                    }\n  return newState;\n}`
+                                );
                             }
                         }
                     }
                     vscode.workspace.applyEdit(wordspaceEditCode);
                 }
             }
-            vscode.window.showInformationMessage(
-                "Add Action Success!"
-            );
+            vscode.window.showInformationMessage("Add Action Success!");
         }
     );
 
@@ -332,9 +403,7 @@ export function activate(context: vscode.ExtensionContext) {
                     );
                 }
             }
-            vscode.window.showInformationMessage(
-                "Add Params Success!"
-            );
+            vscode.window.showInformationMessage("Add Params Success!");
         }
     );
 
@@ -446,7 +515,10 @@ async function provideCompletionItemsForFishReduxDispatch(
                 let ss = new vscode.SnippetString(`${actionInfo.name}($0));`);
                 ci.insertText = ss;
                 ci.documentation = `${actionInfo.name}`;
-                ci.range = new vscode.Range(new vscode.Position(position.line,position.character),new vscode.Position(position.line,line.range.end.character));
+                ci.range = new vscode.Range(
+                    new vscode.Position(position.line, position.character),
+                    new vscode.Position(position.line, line.range.end.character)
+                );
                 return ci;
             });
             return ciArr;
@@ -482,70 +554,67 @@ async function providerDefinitionForFishReduxAction(
         console.log("word: " + word); // 当前光标所在单词
         console.log("line: " + line.text); // 当前光标所在行
         console.log("projectPath: " + projectPath); // 当前工程目录
-        var rootPath = vscode.workspace.rootPath;
-        if (rootPath !== undefined) {
-            var fileList = await vscode.workspace.findFiles(
-                new vscode.RelativePattern(rootPath, `**/{effect,reducer}.dart`)
+        var fileList = await vscode.workspace.findFiles(
+            new vscode.RelativePattern(projectPath, `**/{effect,reducer}.dart`)
+        );
+        var actionFileList = await vscode.workspace.findFiles(
+            new vscode.RelativePattern(projectPath, `**/action.dart`)
+        );
+        let actionFileListSize = actionFileList.length;
+        var searchAction = "";
+        actionLabel: for (var i = 0; i < actionFileListSize; i++) {
+            const actionCodeDoc = await vscode.workspace.openTextDocument(
+                actionFileList[i]
             );
-            var actionFileList = await vscode.workspace.findFiles(
-                new vscode.RelativePattern(rootPath, `**/action.dart`)
+            const actionCode = actionCodeDoc.getText();
+            const r = new RegExp(
+                `static[\\s]*Action[\\s]*${word}\\([\\s\\S]*\\)[\\s]*\\{[\\s]*return[const\\s]*Action\\(([a-zA-Z0-9]*Action.[a-zA-Z0-9_]*)`,
+                "gm"
             );
-            let actionFileListSize = actionFileList.length;
-            var searchAction = "";
-            actionLabel: for (var i = 0; i < actionFileListSize; i++) {
-                const actionCodeDoc = await vscode.workspace.openTextDocument(
-                    actionFileList[i]
+            const m = r.exec(actionCode);
+            if (m !== null) {
+                console.log(`searchAction ${m[1]}`);
+                searchAction = m[1];
+                break actionLabel;
+            }
+        }
+        if (searchAction.length > 0) {
+            let fileListSize = fileList.length;
+            for (var i = 0; i < fileListSize; i++) {
+                const jumpCodeDoc = await vscode.workspace.openTextDocument(
+                    fileList[i]
                 );
-                const actionCode = actionCodeDoc.getText();
-                const r = new RegExp(
-                    `static[\\s].*Action[\\s].*${word}\\(.*\\)[\\s].*\\{[\\s].*return[const\\s].*Action\\(([a-zA-Z0-9]*Action.[a-zA-Z0-9_]*).*\\);[\\s].*\\}`,
+                const jumpCode = jumpCodeDoc.getText();
+                const r1 = new RegExp(
+                    `${searchAction}[\\s]*:[\\s]*([a-zA-Z0-9_]*)`,
                     "gm"
                 );
-                const m = r.exec(actionCode);
-                if (m !== null) {
-                    console.log(`searchAction ${m[1]}`);
-                    searchAction = m[1];
-                    break actionLabel;
-                }
-            }
-            if (searchAction.length > 0) {
-                let fileListSize = fileList.length;
-                for (var i = 0; i < fileListSize; i++) {
-                    const jumpCodeDoc = await vscode.workspace.openTextDocument(
-                        fileList[i]
-                    );
-                    const jumpCode = jumpCodeDoc.getText();
-                    const r1 = new RegExp(
-                        `${searchAction}[\\s]*:[\\s]*([a-zA-Z0-9_]*)`,
-                        "gm"
-                    );
-                    const m1 = r1.exec(jumpCode);
-                    if (m1 !== null) {
-                        const action = m1[1];
-                        console.log(`action ${action}`);
-                        const lineCount = jumpCodeDoc.lineCount;
-                        var actionLine = 0;
-                        var actionIndex = 0;
-                        getLineLabel: for (var j = 0; j < lineCount; j++) {
-                            const lineText = jumpCodeDoc.lineAt(j).text;
-                            const r = new RegExp(
-                                `[\\S ].*${action}[\\s]*\\(.*\\)[async\\s].*\\{`
-                            );
-                            const m = r.exec(lineText);
-                            if (m !== null) {
-                                actionLine = j;
-                                actionIndex = lineText.indexOf(`${action}`);
-                                break getLineLabel;
-                            }
+                const m1 = r1.exec(jumpCode);
+                if (m1 !== null) {
+                    const action = m1[1];
+                    console.log(`action ${action}`);
+                    const lineCount = jumpCodeDoc.lineCount;
+                    var actionLine = 0;
+                    var actionIndex = 0;
+                    getLineLabel: for (var j = 0; j < lineCount; j++) {
+                        const lineText = jumpCodeDoc.lineAt(j).text;
+                        const r = new RegExp(
+                            `[\\S ].*${action}[\\s]*\\(.*\\)[async\\s].*\\{`
+                        );
+                        const m = r.exec(lineText);
+                        if (m !== null) {
+                            actionLine = j;
+                            actionIndex = lineText.indexOf(`${action}`);
+                            break getLineLabel;
                         }
-                        console.log(
-                            `actionLine ${actionLine} actionIndex ${actionIndex}`
-                        );
-                        return new vscode.Location(
-                            fileList[i],
-                            new vscode.Position(actionLine, actionIndex)
-                        );
                     }
+                    console.log(
+                        `actionLine ${actionLine} actionIndex ${actionIndex}`
+                    );
+                    return new vscode.Location(
+                        fileList[i],
+                        new vscode.Position(actionLine, actionIndex)
+                    );
                 }
             }
         }
@@ -553,4 +622,4 @@ async function providerDefinitionForFishReduxAction(
 }
 
 // this method is called when your extension is deactivated
-export function deactivate() { }
+export function deactivate() {}

@@ -7,3 +7,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 - Initial release
+  
+## [0.0.15] - 2020-09-21
+
+### Fixed
+
+- Fixed jump to Action
