@@ -109,6 +109,10 @@ optimise dispatch auto completion
 
 Fixed jump to Action
 
+### 0.0.16
+
+Fixed jump to Action
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown

@@ -573,8 +573,32 @@ async function providerDefinitionForFishReduxAction(
             );
             const m = r.exec(actionCode);
             if (m !== null) {
-                console.log(`searchAction ${m[1]}`);
-                searchAction = m[1];
+                var isStartCheckAction = false;
+                actionInnerLabel: for (
+                    var j = 0;
+                    j < actionCodeDoc.lineCount;
+                    j++
+                ) {
+                    let lineText = actionCodeDoc.lineAt(j).text;
+                    const rInner = new RegExp(
+                        `static[\\s]*Action[\\s]*${word}\\(`
+                    );
+                    const mInner = rInner.exec(lineText);
+                    if (mInner != null) {
+                        isStartCheckAction = true;
+                    } else if (isStartCheckAction) {
+                        const rInner2 = new RegExp(
+                            `return[const\\s]*Action\\(([a-zA-Z0-9]*Action.[a-zA-Z0-9_]*)`
+                        );
+                        const mInner2 = rInner2.exec(lineText);
+                        if (mInner2 != null) {
+                            searchAction = mInner2[1];
+                            console.log(`searchAction ${searchAction}`);
+                            isStartCheckAction = false;
+                            break actionInnerLabel;
+                        }
+                    }
+                }
                 break actionLabel;
             }
         }

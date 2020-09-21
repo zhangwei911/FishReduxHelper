@@ -8,7 +8,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - Initial release
   
-## [0.0.15] - 2020-09-21
+## [0.0.15-0.0.16] - 2020-09-21
 
 ### Fixed
 
