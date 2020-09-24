@@ -13,3 +13,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - Fixed jump to Action
+  
+## [0.0.17] - 2020-09-24
+
+### Fixed
+
+- Fixed Add Reducer Action

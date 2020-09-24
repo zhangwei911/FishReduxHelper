@@ -113,6 +113,10 @@ Fixed jump to Action
 
 Fixed jump to Action
 
+### 0.0.17
+
+Fixed Add Reducer Action
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown
