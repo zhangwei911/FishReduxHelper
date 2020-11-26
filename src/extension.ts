@@ -231,7 +231,7 @@ export function activate(context: vscode.ExtensionContext) {
                                         codeDoc.lineAt(index).range.end
                                             .character - 1
                                     ),
-                                    (lineText.indexOf(':') != -1 ? ', ' : '') + `${pageNamePrefix}Action.${actionName}:_${actionName}`
+                                    (lineText.indexOf(':') !== -1 ? ', ' : '') + `${pageNamePrefix}Action.${actionName}:_${actionName}`
                                 );
                             } else {
                                 isStartCheck = true;

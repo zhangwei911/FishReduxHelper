@@ -19,3 +19,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Fixed
 
 - Fixed Add Reducer Action
+
+## [0.0.18] - 2020-11-26
+
+### Add
+
+- Add TabController Action

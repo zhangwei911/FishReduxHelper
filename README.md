@@ -30,6 +30,9 @@ findState
 
 ![img](https://github.com/zhangwei911/FishReduxHelper/blob/master/screenShots/find.gif?raw=true)
 
+
+addTabController
+
 ## Requirements
 
 ## Extension Settings
@@ -116,6 +119,10 @@ Fixed jump to Action
 ### 0.0.17
 
 Fixed Add Reducer Action
+
+### 0.0.18
+
+Add TabController Action
 
 -----------------------------------------------------------------------------------------------------------
 
