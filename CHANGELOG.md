@@ -7,3 +7,15 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [Unreleased]
 
 - Initial release
+  
+## [0.0.15-0.0.16] - 2020-09-21
+
+### Fixed
+
+- Fixed jump to Action
+  
+## [0.0.17] - 2020-09-24
+
+### Fixed
+
+- Fixed Add Reducer Action

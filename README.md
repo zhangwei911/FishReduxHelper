@@ -105,6 +105,18 @@ use vscode.workspace.applyEdit instead of vscode.workspace.fs.writeFile
 
 optimise dispatch auto completion
 
+### 0.0.15
+
+Fixed jump to Action
+
+### 0.0.16
+
+Fixed jump to Action
+
+### 0.0.17
+
+Fixed Add Reducer Action
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown
