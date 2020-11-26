@@ -5,6 +5,7 @@ import { SelectItem } from "./bean";
 import * as path from "path";
 import { stringToUint8Array } from "./utils";
 import { find } from "./function/find";
+import { add_tabcontroller } from "./function/add_tabcontroller";
 import { randomBytes } from "crypto";
 
 // this method is called when your extension is activated
@@ -368,6 +369,7 @@ export function activate(context: vscode.ExtensionContext) {
     findArr.forEach((findInfo) => {
         context.subscriptions.push(find(findInfo.command, findInfo.fileType));
     });
+    context.subscriptions.push(add_tabcontroller());
 }
 
 /**
@@ -446,7 +448,7 @@ async function provideCompletionItemsForFishReduxDispatch(
                 let ss = new vscode.SnippetString(`${actionInfo.name}($0));`);
                 ci.insertText = ss;
                 ci.documentation = `${actionInfo.name}`;
-                ci.range = new vscode.Range(new vscode.Position(position.line,position.character),new vscode.Position(position.line,line.range.end.character));
+                ci.range = new vscode.Range(new vscode.Position(position.line, position.character), new vscode.Position(position.line, line.range.end.character));
                 return ci;
             });
             return ciArr;
