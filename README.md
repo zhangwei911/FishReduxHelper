@@ -124,6 +124,10 @@ Fixed Add Reducer Action
 
 Add TabController Action
 
+### 0.0.19
+
+Add Languages Action
+
 -----------------------------------------------------------------------------------------------------------
 
 ## Working with Markdown

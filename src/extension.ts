@@ -6,6 +6,7 @@ import * as path from "path";
 import { stringToUint8Array } from "./utils";
 import { find } from "./function/find";
 import { add_tabcontroller } from "./function/add_tabcontroller";
+import { add_languages } from "./function/add_languages";
 import { randomBytes } from "crypto";
 
 // this method is called when your extension is activated
@@ -434,6 +435,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(find(findInfo.command, findInfo.fileType));
     });
     context.subscriptions.push(add_tabcontroller());
+    context.subscriptions.push(add_languages());
 }
 
 /**

@@ -2,7 +2,7 @@
 	"name": "fishreduxhelper",
 	"displayName": "FishReduxHelper",
 	"description": "Fish Redux Helper",
-	"version": "0.0.18",
+	"version": "0.0.19",
 	"engines": {
 		"vscode": "^1.51.0"
 	},
@@ -23,6 +23,7 @@
 		"onCommand:fishreduxhelper.findPage",
 		"onCommand:fishreduxhelper.findState",
 		"onCommand:fishreduxhelper.addTabController",
+		"onCommand:fishreduxhelper.addLanguages",
 		"onLanguage:dart"
 	],
 	"main": "./out/extension.js",
@@ -67,10 +68,12 @@
 			{
 				"command": "fishreduxhelper.findState",
 				"title": "Fish Redux Helper: Find State"
-			},
-			{
+			}, {
 				"command": "fishreduxhelper.addTabController",
 				"title": "Fish Redux Helper: Add TabController"
+			}, {
+				"command": "fishreduxhelper.addLanguages",
+				"title": "Fish Redux Helper: Add Languages"
 			}
 		]
 	},

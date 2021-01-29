@@ -25,3 +25,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Add
 
 - Add TabController Action
+
+## [0.0.19] - 2021-01-29
+
+### Add
+
+- Add Languages Action
